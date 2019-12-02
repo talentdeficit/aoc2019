@@ -1,6 +1,6 @@
 module aoc2019
 
-include("one/solution.jl")
-include("two/solution.jl")
+include("one/lib.jl")
+include("two/lib.jl")
 
 end

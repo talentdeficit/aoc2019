@@ -62,13 +62,4 @@ module two
         vec(readdlm(file, ',', Int))
     end
 
-    input = joinpath(@__DIR__, "input")
-    p = read_program(input)
-    p1 = run(copy(p))[1]
-    p2 = nv(copy(p))
-    print("------------------------------\n")
-    print("2012 program alarm -- part one\n    final value : $p1\n")
-    print("2012 program alarm -- part two\n    nounverb    : $p2\n")
-    print("------------------------------\n")
-
 end

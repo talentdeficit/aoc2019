@@ -23,13 +23,4 @@ module one
         vec(readdlm(file, Int))
     end
 
-    input = joinpath(@__DIR__, "input")
-    weights = read_weights(input)
-    p1 = calculate_fuel(weights)
-    p2 = calculate_total_fuel(weights)
-    print("----------------------------------------------\n")
-    print("the tyranny of the rocket equation -- part one\n    fuel required : $p1\n")
-    print("the tyranny of the rocket equation -- part two\n    fuel required : $p2\n")
-    print("----------------------------------------------\n")
-
 end

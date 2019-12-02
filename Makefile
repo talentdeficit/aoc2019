@@ -1,9 +1,12 @@
-.PHONY: one two
+.PHONY: all test one two
 
 all: one two
 
+test:
+	julia --project=@. test/runtests.jl
+
 one:
-	julia --project=@. src/one/solution.jl
+	julia --project=@. bin/one/run.jl
 
 two:
-	julia --project=@. src/two/solution.jl
+	julia --project=@. bin/two/run.jl
