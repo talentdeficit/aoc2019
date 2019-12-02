@@ -1,5 +1,7 @@
 module two
 
+    using DelimitedFiles
+
     function run(program)
         run(program, 1)
     end
@@ -45,7 +47,7 @@ module two
     end
 
     function nv(program, i, j)
-        let new_program = deepcopy(program)
+        let new_program = copy(program)
             new_program[2] = i
             new_program[3] = j
             if run(new_program)[1] == 19690720
@@ -59,5 +61,14 @@ module two
     function read_program(file)
         vec(readdlm(file, ',', Int))
     end
+
+    input = joinpath(@__DIR__, "input")
+    p = read_program(input)
+    p1 = run(copy(p))[1]
+    p2 = nv(copy(p))
+    print("------------------------------\n")
+    print("2012 program alarm -- part one\n    final value : $p1\n")
+    print("2012 program alarm -- part two\n    nounverb    : $p2\n")
+    print("------------------------------\n")
 
 end
