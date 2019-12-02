@@ -1,0 +1,8 @@
+name = "aoc2019"
+uuid = "ac2e3745-7428-46db-9b95-bddda711fc5f"
+authors = ["@talentdeficit"]
+version = "0.1.0"
+
+[deps]
+DelimitedFiles = "8bb1440f-4735-579b-a4ab-409b98df4dab"
+Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
