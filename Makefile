@@ -1,6 +1,6 @@
 .PHONY: all test one two
 
-all: one two
+all: one two three
 
 test:
 	julia --project=@. test/runtests.jl
@@ -10,3 +10,6 @@ one:
 
 two:
 	julia --project=@. bin/two/run.jl
+
+three:
+	julia --project=@. bin/three/run.jl
