@@ -6,8 +6,8 @@ module password
         return count([iscandidate(pass) for pass in first:last])
     end
 
-    function checkv2(first::Int, last::Int)
-        return count([iscandidate(pass) && iscandidatev2(pass) for pass in first:last])
+    function check_strict(first::Int, last::Int)
+        return count([iscandidate(pass) && iscandidate_strict(pass) for pass in first:last])
     end
 
     function iscandidate(password::String)
@@ -26,14 +26,14 @@ module password
         return size == 6 && ascending && repeated
     end
 
-    function iscandidatev2(password::String)
+    function iscandidate_strict(password::String)
         iscandidatev2(parse(password, Int))
     end
 
-    function iscandidatev2(password::Int)
+    function iscandidate_strict(password::Int)
         pass = digits(password)
         # password must use a digit exactly twice
-        return !isempty(filter(x -> x == 2, collect(values(countmap(pass)))))
+        return 2 in values(countmap(pass))
     end
 
 end

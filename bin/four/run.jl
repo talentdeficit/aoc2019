@@ -5,7 +5,7 @@ last = 784956
 
 p1 = aoc2019.password.check(first, last)
 @assert p1 == 1150
-p2 = aoc2019.password.checkv2(first, last)
+p2 = aoc2019.password.check_strict(first, last)
 @assert p2 == 748
 
 print("----------------------------\n")

@@ -49,7 +49,7 @@ end
 end
 
 @testset "secure container -- part two" begin
-    @test aoc2019.password.iscandidate(112233) && aoc2019.password.iscandidatev2(112233) == true
-    @test aoc2019.password.iscandidate(123444) && aoc2019.password.iscandidatev2(123444)== false
-    @test aoc2019.password.iscandidate(111122) && aoc2019.password.iscandidatev2(1111122)== true
+    @test aoc2019.password.iscandidate(112233) && aoc2019.password.iscandidate_strict(112233) == true
+    @test aoc2019.password.iscandidate(123444) && aoc2019.password.iscandidate_strict(123444)== false
+    @test aoc2019.password.iscandidate(111122) && aoc2019.password.iscandidate_strict(1111122)== true
 end
