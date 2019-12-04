@@ -1,26 +1,20 @@
 module fuel
 
-    using DelimitedFiles
-
     function fuel_for_weight(weight)
         fld(weight, 3) - 2
     end
 
-    function calculate_fuel(weights)
+    function total(weights)
         return sum(fuel_for_weight, weights)
     end
 
-    function fuel_for_weight_v2(weight)
+    function correct_fuel_for_weight(weight)
         fuel = fuel_for_weight(weight)
-        fuel <= 0 ? 0 : fuel += fuel_for_weight_v2(fuel)
+        fuel <= 0 ? 0 : fuel += correct_fuel_for_weight(fuel)
     end
 
-    function calculate_fuel_v2(weights)
-        return sum(fuel_for_weight_v2, weights)
-    end
-
-    function read_weights(file)
-        vec(readdlm(file, Int))
+    function correct_total(weights)
+        return sum(correct_fuel_for_weight, weights)
     end
 
 end
