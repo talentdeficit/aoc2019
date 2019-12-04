@@ -41,3 +41,15 @@ end
         ["U98","R91","D20","R16","D67","R40","U7","R15","U6","R7"]
     ) == 410
 end
+
+@testset "secure container -- part one" begin
+    @test aoc2019.password.iscandidate(111111) == true
+    @test aoc2019.password.iscandidate(223450) == false
+    @test aoc2019.password.iscandidate(123789) == false
+end
+
+@testset "secure container -- part two" begin
+    @test aoc2019.password.iscandidate(112233) && aoc2019.password.iscandidatev2(112233) == true
+    @test aoc2019.password.iscandidate(123444) && aoc2019.password.iscandidatev2(123444)== false
+    @test aoc2019.password.iscandidate(111122) && aoc2019.password.iscandidatev2(1111122)== true
+end
