@@ -27,7 +27,7 @@ module password
     end
 
     function iscandidatev2(password::String)
-        iscandidate(parse(password, Int))
+        iscandidatev2(parse(password, Int))
     end
 
     function iscandidatev2(password::Int)

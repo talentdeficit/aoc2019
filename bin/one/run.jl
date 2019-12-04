@@ -1,7 +1,7 @@
 using aoc2019, DelimitedFiles
 
 input = joinpath(@__DIR__, "input")
-weights = vec(readdlm(input, Int))
+weights = readdlm(input, Int)
 
 p1 = aoc2019.fuel.total(weights)
 @assert p1 == 3420719

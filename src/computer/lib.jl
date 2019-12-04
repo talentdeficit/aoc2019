@@ -1,7 +1,5 @@
 module computer
 
-    using DelimitedFiles
-
     function run(program)
         run(program, 1)
     end
@@ -32,16 +30,11 @@ module computer
     end
 
     function nv(program)
-        let i = 1, j = 1
-            while i <= 100
-                while j <= 100
-                    if nv(program, i, j)
-                        return 100 * i + j
-                    end
-                    j += 1
+        for i = 1:100
+            for j = 1:100
+                if nv(program, i, j)
+                    return 100 * i + j
                 end
-                j = 1
-                i += 1
             end
         end
     end
@@ -56,10 +49,6 @@ module computer
                 return false
             end
         end
-    end
-
-    function read_program(file)
-        vec(readdlm(file, ',', Int))
     end
 
 end
