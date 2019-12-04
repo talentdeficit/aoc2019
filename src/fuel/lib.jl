@@ -1,4 +1,4 @@
-module one
+module fuel
 
     using DelimitedFiles
 
@@ -10,13 +10,13 @@ module one
         return sum(fuel_for_weight, weights)
     end
 
-    function total_fuel_for_weight(weight)
+    function fuel_for_weight_v2(weight)
         fuel = fuel_for_weight(weight)
-        fuel <= 0 ? 0 : fuel += total_fuel_for_weight(fuel)
+        fuel <= 0 ? 0 : fuel += fuel_for_weight_v2(fuel)
     end
 
-    function calculate_total_fuel(weights)
-        return sum(total_fuel_for_weight, weights)
+    function calculate_fuel_v2(weights)
+        return sum(fuel_for_weight_v2, weights)
     end
 
     function read_weights(file)

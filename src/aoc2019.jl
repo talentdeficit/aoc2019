@@ -1,8 +1,8 @@
 module aoc2019
 
-include("one/lib.jl")
-include("two/lib.jl")
-include("three/lib.jl")
+include("fuel/lib.jl")
+include("computer/lib.jl")
+include("wiring/lib.jl")
 include("password/lib.jl")
 
 end

@@ -1,4 +1,4 @@
-module three
+module wiring
 
     struct Point
         x::Int64
