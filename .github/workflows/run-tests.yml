@@ -1,0 +1,20 @@
+name: run-tests
+
+on: [push, pull_request]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: checkout code
+      uses: actions/checkout@v1
+    - name: setup julia env
+      uses: julia-actions/setup-julia@v1.0.1
+      with:
+        version: 1
+    - name: install dependencies
+      run: make install
+    - name: run tests
+      run: make test
