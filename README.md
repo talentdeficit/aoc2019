@@ -2,7 +2,7 @@
 
 solutions in julia
 
-https://github.com/talentdeficit/aoc2019/workflows/test/badge.svg
+![](https://github.com/talentdeficit/aoc2019/workflows/test/badge.svg)
 
 ## run
 
