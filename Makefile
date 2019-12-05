@@ -2,6 +2,9 @@
 
 all: one two three four
 
+install:
+	julia --project=@. -e 'using Pkg; Pkg.instantiate()'
+
 test:
 	julia --project=@. test/runtests.jl
 
