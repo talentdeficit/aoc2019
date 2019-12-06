@@ -29,8 +29,7 @@ module wiring
         for op in ops
             direction = SubString(op, 1, 1)
             distance = parse(Int, SubString(op, 2))
-            i = 0
-            while i < distance
+            for i = 1:distance
                 location = move(direction, x, y)
                 x = location.x
                 y = location.y
@@ -38,7 +37,6 @@ module wiring
                 if !haskey(acc, location)
                     acc[location] = counter
                 end
-                i += 1
             end
         end
         return acc
