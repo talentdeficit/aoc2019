@@ -1,7 +1,7 @@
 using aoc2019, DelimitedFiles
 
 input = joinpath(@__DIR__, "input")
-ops = vec(readdlm(input, String))
+ops = readdlm(input, String)
 
 left = split(ops[1], ',')
 right = split(ops[2], ',')
