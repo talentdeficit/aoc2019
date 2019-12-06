@@ -89,3 +89,16 @@ end
         1106,0,36,98,0,0,1002,21,125,20,4,20,1105,1,46,104,
         999,1105,1,46,1101,1000,1,20,4,20,1105,1,46,98,99], [9], [])[2] == [1001]
 end
+
+@testset "universal orbit map -- part one" begin
+    @test aoc2019.star_chart.total_orbits([
+        "COM)B", "B)C", "C)D", "D)E", "E)F", "B)G", "G)H", "D)I", "E)J", "J)K", "K)L"
+    ]) == 42
+end
+
+@testset "universal orbit map -- part two" begin
+    @test aoc2019.star_chart.total_transfers([
+        "COM)B", "B)C", "C)D", "D)E", "E)F", "B)G", "G)H", "D)I",
+        "E)J", "J)K", "K)L", "K)YOU", "I)SAN"
+    ]) == 4
+end
