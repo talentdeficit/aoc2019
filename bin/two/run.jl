@@ -31,7 +31,7 @@ p1 = aoc2019.computer.run(copy(p))[1]
 p2 = nv(copy(p))
 @assert p2 == 8478
 
-print("------------------------------\n")
+print("-----------------------------------------------------------------------\n")
 print("2012 program alarm -- part one\n    final value : $p1\n")
 print("2012 program alarm -- part two\n    nounverb    : $p2\n")
-print("------------------------------\n")
+print("-----------------------------------------------------------------------\n")

@@ -11,7 +11,7 @@ p1 = last(outputs)
 p2 = last(outputs)
 @assert p2 == 9168267
 
-print("--------------------------------------------\n")
+print("-----------------------------------------------------------------------\n")
 print("sunny with a chance of asteroids -- part one\n    final value : $p1\n")
 print("sunny with a chance of asteroids -- part two\n    final value : $p2\n")
-print("--------------------------------------------\n")
+print("-----------------------------------------------------------------------\n")

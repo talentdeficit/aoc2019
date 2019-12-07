@@ -9,7 +9,7 @@ p1 = aoc2019.fuel.total(weights)
 p2 = aoc2019.fuel.correct_total(weights)
 @assert p2 == 5128195
 
-print("----------------------------------------------\n")
+print("-----------------------------------------------------------------------\n")
 print("the tyranny of the rocket equation -- part one\n    fuel required : $p1\n")
 print("the tyranny of the rocket equation -- part two\n    fuel required : $p2\n")
-print("----------------------------------------------\n")
+print("-----------------------------------------------------------------------\n")

@@ -3,18 +3,18 @@ module password
     using StatsBase
 
     function check(first::Int, last::Int)
-        return count([iscandidate(pass) for pass in first:last])
+        return count([is_candidate(pass) for pass in first:last])
     end
 
     function check_strict(first::Int, last::Int)
-        return count([iscandidate(pass) && iscandidate_strict(pass) for pass in first:last])
+        return count([is_candidate(pass) && is_candidate_strict(pass) for pass in first:last])
     end
 
-    function iscandidate(password::String)
-        iscandidate(parse(password, Int))
+    function is_candidate(password::String)
+        is_candidate(parse(password, Int))
     end
 
-    function iscandidate(password::Int)
+    function is_candidate(password::Int)
         pass = digits(password)
         # password must be six characters
         size = length(pass)
@@ -26,11 +26,11 @@ module password
         return size == 6 && ascending && repeated
     end
 
-    function iscandidate_strict(password::String)
-        iscandidatev2(parse(password, Int))
+    function is_candidate_strict(password::String)
+        is_candidate_strict(parse(password, Int))
     end
 
-    function iscandidate_strict(password::Int)
+    function is_candidate_strict(password::Int)
         pass = digits(password)
         # password must use a digit exactly twice
         return 2 in values(countmap(pass))

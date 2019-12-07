@@ -12,7 +12,7 @@ p1 = aoc2019.wiring.manhattan_distance(left, right)
 p2 = aoc2019.wiring.signal_delay(left, right)
 @assert p2 == 27330
 
-print("-------------------------\n")
+print("-----------------------------------------------------------------------\n")
 print("crossed wires -- part one\n    distance : $p1\n")
 print("crossed wires -- part two\n    delay    : $p2\n")
-print("-------------------------\n")
+print("-----------------------------------------------------------------------\n")

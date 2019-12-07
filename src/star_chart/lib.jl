@@ -13,19 +13,8 @@ module star_chart
         (ps, gr) = graph_orbits(os)
         me = orbiting(gr, ps["YOU"])
         santa = orbiting(gr, ps["SAN"])
-        trips = []
-        for p in vertices(gr)
-            has_path(gr, me, p) && has_path(gr, santa, p) ?
-                append!(trips, distance_via(gr, p, me, santa)) :
-                continue
-        end
-        return minimum(trips)
-    end
-
-    function distance_via(gr, p, x, y)
-        intrip = length(a_star(gr, x, p))
-        outtrip = length(a_star(gr, y, p))
-        return intrip + outtrip
+        return length(a_star(gr, me, santa))
+        
     end
 
     function orbiting(gr, body)
@@ -40,7 +29,7 @@ module star_chart
     end
 
     function graph_orbits(orbits)
-        orbit_map = DiGraph()
+        orbit_map = Graph()
         bodies = Dict{String, Int}()
         for orbit in orbits
             parent = orbit[1]

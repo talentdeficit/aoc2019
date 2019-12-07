@@ -9,7 +9,7 @@ p1 = aoc2019.star_chart.total_orbits(orbits)
 p2 = aoc2019.star_chart.total_transfers(orbits)
 @assert p2 == 547
 
-print("-------------------------------\n")
+print("-----------------------------------------------------------------------\n")
 print("universal orbit map -- part one\n    total orbits    : $p1\n")
 print("universal orbit map -- part two\n    total transfers : $p2\n")
-print("-------------------------------\n")
+print("-----------------------------------------------------------------------\n")
