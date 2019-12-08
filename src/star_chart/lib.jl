@@ -18,7 +18,7 @@ module star_chart
     end
 
     function orbiting(gr, body)
-        return neighbors(gr, body)[1]
+        return first(neighbors(gr, body))
     end
 
     function parse_map(orbits)
@@ -32,8 +32,7 @@ module star_chart
         orbit_map = Graph()
         bodies = Dict{String, Int}()
         for orbit in orbits
-            parent = orbit[1]
-            child = orbit[2]
+            (parent, child) = orbit
             vp = assign_id_to_body(bodies, orbit_map, parent)
             vc = assign_id_to_body(bodies, orbit_map, child)
             add_edge!(orbit_map, vc, vp)
@@ -56,7 +55,7 @@ module star_chart
         origin = bodies["COM"]
         count = 0
         for body in bodies
-            id = body[2]
+            (_, id) = body
             count += length(a_star(orbit_map, id, origin))
         end
         return count
