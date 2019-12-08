@@ -1,6 +1,6 @@
-.PHONY: all test one two three four five six seven
+.PHONY: all test one two three four five six seven eight
 
-all: one two three four five six seven
+all: one two three four five six seven eight
 
 install:
 	julia --project=@. -e 'using Pkg; Pkg.instantiate()'
@@ -28,3 +28,6 @@ six:
 
 seven:
 	julia --project=@. bin/seven/run.jl
+
+eight:
+	julia --project=@. bin/eight/run.jl
