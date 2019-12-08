@@ -1,13 +1,13 @@
-using aoc2019
+using aoc2019.computer: load_program, run
 
 input = joinpath(@__DIR__, "input")
-p = aoc2019.computer.load_program(input)
+p = load_program(input)
 
-(_, output) = aoc2019.computer.run(copy(p), [1])
+(_, output) = run(copy(p), [1])
 p1 = output
 @assert p1 == 6745903
 
-(_, output) = aoc2019.computer.run(copy(p), [5])
+(_, output) = run(copy(p), [5])
 p2 = output
 @assert p2 == 9168267
 

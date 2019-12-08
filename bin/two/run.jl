@@ -1,4 +1,4 @@
-using aoc2019
+using aoc2019.computer: load_program, run
 
 function nv(program)
     for i = 1:100
@@ -14,7 +14,7 @@ function nv(program, i, j)
     let new_program = copy(program)
         new_program[2] = i
         new_program[3] = j
-        if first(aoc2019.computer.run(new_program)) == 19690720
+        if first(run(new_program)) == 19690720
             return true
         else
             return false
@@ -23,9 +23,9 @@ function nv(program, i, j)
 end
 
 input = joinpath(@__DIR__, "input")
-p = aoc2019.computer.load_program(input)
+p = load_program(input)
 
-p1 = first(aoc2019.computer.run(copy(p)))
+p1 = first(run(copy(p)))
 @assert p1 == 3101844
 
 p2 = nv(copy(p))

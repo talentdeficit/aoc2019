@@ -1,12 +1,13 @@
-using aoc2019, DelimitedFiles
+using aoc2019.fuel: total, correct_total
+using DelimitedFiles
 
 input = joinpath(@__DIR__, "input")
 weights = readdlm(input, Int)
 
-p1 = aoc2019.fuel.total(weights)
+p1 = total(weights)
 @assert p1 == 3420719
 
-p2 = aoc2019.fuel.correct_total(weights)
+p2 = correct_total(weights)
 @assert p2 == 5128195
 
 print("-----------------------------------------------------------------------\n")

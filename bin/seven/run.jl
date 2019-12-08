@@ -1,16 +1,18 @@
-using aoc2019, Combinatorics
+using aoc2019.computer: load_program
+using aoc2019.thrusters: output, feedback_loop
+using Combinatorics
 
 input = joinpath(@__DIR__, "input")
-p = aoc2019.computer.load_program(input)
+p = load_program(input)
 
 perms = collect(permutations([4,3,2,1,0]))
 
-p1 = maximum([aoc2019.thrusters.output(copy(p), perm, 0) for perm in perms])
+p1 = maximum([output(copy(p), perm, 0) for perm in perms])
 @assert p1 == 338603
 
 perms = collect(permutations([9,8,7,6,5]))
 
-p2 = maximum([aoc2019.thrusters.feedback_loop(copy(p), perm, 0) for perm in perms])
+p2 = maximum([feedback_loop(copy(p), perm, 0) for perm in perms])
 @assert p2 == 63103596
 
 print("-----------------------------------------------------------------------\n")

@@ -1,12 +1,13 @@
-using aoc2019, DelimitedFiles
+using aoc2019.star_chart: total_orbits, total_transfers
+using DelimitedFiles
 
 input = joinpath(@__DIR__, "input")
 orbits = readdlm(input, String)
 
-p1 = aoc2019.star_chart.total_orbits(orbits)
+p1 = total_orbits(orbits)
 @assert p1 == 301100
 
-p2 = aoc2019.star_chart.total_transfers(orbits)
+p2 = total_transfers(orbits)
 @assert p2 == 547
 
 print("-----------------------------------------------------------------------\n")
