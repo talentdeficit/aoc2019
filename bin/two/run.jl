@@ -14,7 +14,8 @@ function nv(program, i, j)
     let new_program = copy(program)
         new_program[2] = i
         new_program[3] = j
-        if first(run(new_program)) == 19690720
+        state = run(new_program)
+        if first(state.program) == 19690720
             return true
         else
             return false
@@ -25,7 +26,8 @@ end
 input = joinpath(@__DIR__, "input")
 p = load_program(input)
 
-p1 = first(run(copy(p)))
+state = run(copy(p))
+p1 = first(state.program)
 @assert p1 == 3101844
 
 p2 = nv(copy(p))

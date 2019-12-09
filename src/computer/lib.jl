@@ -5,131 +5,180 @@ export run, next, State
 using DelimitedFiles, Match
 
 mutable struct State
-    program::Array{Int}
-    instruction::Union{Int,Nothing}
-    inputs::Array{Int}
-    outputs::Array{Int}
+    program::Array{Int64}
+    instruction::Union{Int64,Nothing}
+    relative_base::Int64
+    inputs::Array{Int64}
+    outputs::Array{Int64}
 end
 
 function run(program)
-    state = State(program, 1, [], [])
+    state = State(program, 1, 0, [], [])
     while true
         state = next(state)
         state.instruction === nothing ? break : continue
     end
-    return state.program
+    return state
 end
 
 function run(program, inputs)
-    state = State(program, 1, inputs, [])
+    state = State(program, 1, 0, inputs, [])
     while true
         state = next(state)
         state.instruction === nothing ? break : continue
     end
-    return (state.program, first(state.outputs))
+    return state
 end
 
 function next(state)
-    instruction = state.instruction
     program = state.program
+    instruction = state.instruction
+    rel = state.relative_base
     inputs = state.inputs
     outputs = state.outputs
     op = program[state.instruction]
     @match rem(op, 100) begin
         # ADD
         1 => begin
-            x = pval(op, program, instruction, 1)
-            y = pval(op, program, instruction, 2)
-            dest = program[instruction + 3]
-            program[dest + 1] = x + y
+            x = rval(state, 1)
+            y = rval(state, 2)
+            dest = wval(state, 3)
+            write(state, dest, x + y)
             state.instruction += 4
-            next(state)
+            return state
         end
         # MULTIPLY
         2 => begin
-            x = pval(op, program, instruction, 1)
-            y = pval(op, program, instruction, 2)
-            dest = program[instruction + 3]
-            program[dest + 1] = x * y
+            x = rval(state, 1)
+            y = rval(state, 2)
+            dest = wval(state, 3)
+            write(state, dest, x * y)
             state.instruction += 4
-            next(state)
+            return state
         end
         # INPUT
         3 => begin
-            dest = program[instruction + 1]
+            dest = wval(state, 1)
             if isempty(inputs)
                 # block on waiting for input
                 return state
             else
                 input = pop!(inputs)
-                program[dest + 1] = input
+                write(state, dest, input)
                 state.instruction += 2
-                next(state)
+                return state
             end
         end
         # OUTPUT
         4 => begin
-            val = pval(op, program, instruction, 1)
+            val = rval(state, 1)
             state.instruction += 2
             prepend!(state.outputs, val)
-            next(state)
+            return state
         end
         # JUMP IF TRUE
         5 => begin
-            val = pval(op, program, instruction, 1)
-            dest = pval(op, program, instruction, 2)
+            val = rval(state, 1)
+            dest = rval(state, 2)
             val != 0 ?
                 state.instruction = dest + 1 :
                 state.instruction += 3
-            next(state)
+            return state
         end
         # JUMP IF FALSE
         6 => begin
-            val = pval(op, program, instruction, 1)
-            dest = pval(op, program, instruction, 2)
+            val = rval(state, 1)
+            dest = rval(state, 2)
             val == 0 ?
                 state.instruction = dest + 1 :
                 state.instruction += 3
-            next(state)
+            return state
         end
         # LESS THAN
         7 => begin
-            x = pval(op, program, instruction, 1)
-            y = pval(op, program, instruction, 2)
-            dest = program[instruction + 3]
-            x < y ? program[dest + 1] = 1 : program[dest + 1] = 0
+            x = rval(state, 1)
+            y = rval(state, 2)
+            dest = wval(state, 3)
+            x < y ? write(state, dest, 1) : write(state, dest, 0)
             state.instruction += 4
-            next(state)
+            return state
         end
         # EQUALS
         8 => begin
-            x = pval(op, program, instruction, 1)
-            y = pval(op, program, instruction, 2)
-            dest = program[instruction + 3]
-            x == y ? program[dest + 1] = 1 : program[dest + 1] = 0
+            x = rval(state, 1)
+            y = rval(state, 2)
+            dest = wval(state, 3)
+            x == y ? write(state, dest, 1) : write(state, dest, 0)
             state.instruction += 4
-            next(state)
+            return state
+        end
+        # ADJUST RELATIVE BASE
+        9 => begin
+            x = rval(state, 1)
+            state.relative_base += x
+            state.instruction += 2
+            return state
         end
         # HALT
-        99 => return State(program, nothing, inputs, outputs)
+        99 => return State(program, nothing, rel, inputs, outputs)
         _ => throw(ErrorException("unknown op code: $op"))
     end
 end
 
-function pval(op, program, instruction, parameter)
+function rval(state, parameter)
+    program = state.program
+    instruction = state.instruction
+    rel = state.relative_base
+    op = program[instruction]
     mode = rem(div(op, ^(10, parameter + 1)), 10)
     @match mode begin
         0 => begin
-            idx = program[instruction + parameter]
-            return program[idx + 1]
+            idx = read(state, instruction + parameter)
+            return read(state, idx + 1)
         end
-        1 => return program[instruction + parameter]
+        1 => return read(state, instruction + parameter)
+        2 => begin
+            offset = read(state, instruction + parameter)
+            return read(state, rel + offset + 1)
+        end
         _ => throw(ErrorException("unknown parameter mode: $mode"))
     end
 end
 
+function wval(state, parameter)
+    program = state.program
+    instruction = state.instruction
+    rel = state.relative_base
+    op = program[instruction]
+    mode = rem(div(op, ^(10, parameter + 1)), 10)
+    @match mode begin
+        0 => begin
+            idx = read(state, instruction + parameter)
+            return idx + 1
+        end
+        2 => begin
+            offset = read(state, instruction + parameter)
+            return rel + offset + 1
+        end
+        _ => throw(ErrorException("unknown parameter mode: $mode"))
+    end
+end
+
+function read(state, index)
+    p = state.program
+    return index > length(state.program) ? 0 : state.program[index]
+end
+
+function write(state, index, value)
+    if index > length(state.program)
+        mem = zeros(Int64, index - length(state.program))
+        state.program = cat(state.program, mem, dims=(1))
+    end
+    state.program[index] = value
+end
+
 function load_program(path)
-    return readdlm(path, ',', Int)
+    return vec(readdlm(path, ',', Int64))
 end
 
 end

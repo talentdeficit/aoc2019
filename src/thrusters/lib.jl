@@ -8,7 +8,8 @@ function output(program, phases, initial)
     signal = initial
     for phase in phases
         p = copy(program)
-        (_, signal) = computer.run(p, [signal, phase])
+        state = computer.run(p, [signal, phase])
+        signal = first(state.outputs)
     end
     return first(signal)
 end
@@ -40,7 +41,7 @@ function feedback_loop(program, phases, initial)
 end
 
 function initialize_amplifiers(program, phases, initial)
-    amps = reverse([computer.State(copy(program), 1, [phase], []) for phase in phases])
+    amps = reverse([computer.State(copy(program), 1, 0, [phase], []) for phase in phases])
     # provide initial signal to first amp
     first = pop!(amps)
     first.inputs = prepend!(first.inputs, [0])
