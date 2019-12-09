@@ -5,45 +5,35 @@ export run, next, State
 using DelimitedFiles, Match
 
 mutable struct State
-    program::Array{Int64}
-    instruction::Union{Int64,Nothing}
+    program::Array{Int64,1}
+    instruction::Int64
     relative_base::Int64
-    inputs::Array{Int64}
-    outputs::Array{Int64}
+    inputs::Array{Int64,1}
+    outputs::Array{Int64,1}
+    halted::Bool
 end
 
 function run(program)
-    state = State(program, 1, 0, [], [])
-    while true
-        state = next(state)
-        state.instruction === nothing ? break : continue
-    end
-    return state
+    run(program, [])
 end
 
 function run(program, inputs)
-    state = State(program, 1, 0, inputs, [])
+    state = State(program, 1, 0, inputs, [], false)
     while true
         state = next(state)
-        state.instruction === nothing ? break : continue
+        state.halted ? break : continue
     end
     return state
 end
 
 function next(state)
-    program = state.program
-    instruction = state.instruction
-    rel = state.relative_base
-    inputs = state.inputs
-    outputs = state.outputs
-    op = program[state.instruction]
+    op = state.program[state.instruction]
     @match rem(op, 100) begin
         # ADD
         1 => begin
             x = rval(state, 1)
             y = rval(state, 2)
-            dest = wval(state, 3)
-            write(state, dest, x + y)
+            wval(state, 3, x + y)
             state.instruction += 4
             return state
         end
@@ -51,20 +41,18 @@ function next(state)
         2 => begin
             x = rval(state, 1)
             y = rval(state, 2)
-            dest = wval(state, 3)
-            write(state, dest, x * y)
+            wval(state, 3, x * y)
             state.instruction += 4
             return state
         end
         # INPUT
         3 => begin
-            dest = wval(state, 1)
-            if isempty(inputs)
+            if isempty(state.inputs)
                 # block on waiting for input
                 return state
             else
-                input = pop!(inputs)
-                write(state, dest, input)
+                input = pop!(state.inputs)
+                wval(state, 1, input)
                 state.instruction += 2
                 return state
             end
@@ -98,8 +86,7 @@ function next(state)
         7 => begin
             x = rval(state, 1)
             y = rval(state, 2)
-            dest = wval(state, 3)
-            x < y ? write(state, dest, 1) : write(state, dest, 0)
+            x < y ? wval(state, 3, 1) : wval(state, 3, 0)
             state.instruction += 4
             return state
         end
@@ -107,8 +94,7 @@ function next(state)
         8 => begin
             x = rval(state, 1)
             y = rval(state, 2)
-            dest = wval(state, 3)
-            x == y ? write(state, dest, 1) : write(state, dest, 0)
+            x == y ? wval(state, 3, 1) : wval(state, 3, 0)
             state.instruction += 4
             return state
         end
@@ -120,7 +106,10 @@ function next(state)
             return state
         end
         # HALT
-        99 => return State(program, nothing, rel, inputs, outputs)
+        99 => begin
+            state.halted = true
+            return state
+        end
         _ => throw(ErrorException("unknown op code: $op"))
     end
 end
@@ -145,7 +134,7 @@ function rval(state, parameter)
     end
 end
 
-function wval(state, parameter)
+function wval(state, parameter, value)
     program = state.program
     instruction = state.instruction
     rel = state.relative_base
@@ -154,11 +143,11 @@ function wval(state, parameter)
     @match mode begin
         0 => begin
             idx = read(state, instruction + parameter)
-            return idx + 1
+            write(state, idx + 1, value)
         end
         2 => begin
             offset = read(state, instruction + parameter)
-            return rel + offset + 1
+            write(state, rel + offset + 1, value)
         end
         _ => throw(ErrorException("unknown parameter mode: $mode"))
     end

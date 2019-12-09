@@ -32,7 +32,7 @@ function feedback_loop(program, phases, initial)
         # return current amplifier to queue
         prepend!(amps, [amp])
         # if all amplifiers are finished running, halt
-        if all(map(a -> a.instruction === nothing, amps))
+        if all(map(a -> a.halted == true, amps))
             break;
         end
     end
@@ -41,7 +41,7 @@ function feedback_loop(program, phases, initial)
 end
 
 function initialize_amplifiers(program, phases, initial)
-    amps = reverse([computer.State(copy(program), 1, 0, [phase], []) for phase in phases])
+    amps = reverse([computer.State(copy(program), 1, 0, [phase], [], false) for phase in phases])
     # provide initial signal to first amp
     first = pop!(amps)
     first.inputs = prepend!(first.inputs, [0])
