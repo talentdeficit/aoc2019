@@ -5,6 +5,7 @@ using aoc2019.wiring
 using aoc2019.password
 using aoc2019.star_chart
 using aoc2019.thrusters
+using aoc2019.sif
 
 @testset "the tyranny of the rocket equation -- part one                          " begin
     @test fuel.total([12]) == 2
@@ -145,4 +146,13 @@ end
         [9,7,8,5,6],
         0
     ) == 18216
+end
+
+@testset "space image format -- part one                                          " begin
+    @test sif.checksum(sif.image([1,2,3,4,5,6,7,8,9,0,1,2], 3, 2)) == 1
+    @test sif.checksum(sif.image([0,0,0,0,0,1,1,1,1,1,1,2], 2, 2)) == 3
+end
+
+@testset "space image format -- part two                                          " begin
+    @test sif.resolve(sif.image([0,2,2,2,1,1,2,2,2,2,1,2,0,0,0,0], 2, 2)) == [0 1; 1 0]
 end
