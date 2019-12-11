@@ -1,47 +1,47 @@
 using aoc2019.computer: load_program, read_output, provide_input, next, State
-using aoc2019.hull: Point, Black, White, deploy, move!
-using aoc2019.hull
+using aoc2019.robot: Point, Black, White, deploy, color, paint!, move!
 using Match
 
 input = joinpath(@__DIR__, "input")
 p = load_program(input)
 
-function paint(p, color)
-    robot = deploy()
-    ship = Dict{Point, Int}()
-    ship[robot.location] = color
+function run(program, initial_color)
+    surface = Dict{Point, Int}()
+    robot = deploy(surface)
+    paint!(robot, initial_color)
     m = State(p, 1, 0, [], [], false, false)
     while !m.halted
-        c = hull.color(ship, robot.location)
-        provide_input(m, c)
+        provide_input(m, color(robot))
         m.blocked = false
         while !m.blocked && !m.halted
             m = next(m)
         end
-        paint = read_output(m)
+        current_color = read_output(m)
         turn = read_output(m)
-        ship[robot.location] = paint
+        paint!(robot, current_color)
         move!(robot, turn)
     end
-    return ship
+    return surface
 end
 
-ship = paint(copy(p), Black)
+ship = run(copy(p), Black)
 p1 = length(collect(keys(ship)))
 @assert p1 == 1951
 
-ship = paint(copy(p), White)
+ship = run(copy(p), White)
 p2 = length(collect(keys(ship)))
 @assert p2 == 249
 
-xmax = maximum([p.x + 1 for p in collect(keys(ship))])
-ymax = maximum([abs(p.y) + 1 for p in collect(keys(ship))])
+xmin = minimum([p.x for p in collect(keys(ship))])
+ymin = minimum([p.y for p in collect(keys(ship))])
+xmax = maximum([p.x + abs(xmin) + 1 for p in collect(keys(ship))])
+ymax = maximum([p.y + abs(ymin) + 1 for p in collect(keys(ship))])
 
 panel = zeros(Int, (xmax, ymax))
 for p in ship
     loc = p.first
     color = p.second
-    panel[loc.x + 1, abs(loc.y) + 1] = color
+    panel[loc.x + abs(xmin) + 1, loc.y + abs(ymin) + 1] = color
 end
 
 print("-----------------------------------------------------------------------\n")
@@ -50,7 +50,7 @@ print("space police -- part two\n    identification code :\n")
 for y in 1:ymax
     print("        ")
     for x in 1:xmax
-        glyph = panel[x, y] == 1 ? "#" : " "
+        glyph = panel[x, ymax - y + 1] == 1 ? "#" : " "
         print("$glyph")
     end
     println()
