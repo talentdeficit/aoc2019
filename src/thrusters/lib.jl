@@ -19,14 +19,15 @@ function feedback_loop(program, phases, initial)
     signal = nothing
     while true
         amp = pop!(amps)
-        if amp.instruction !== nothing
+        if amp.halted != true
             amp = computer.next(amp)
         end
         # copy output to next amplifier
         next = pop!(amps)
-        for o in amp.outputs
+        while !isempty(amp.outputs)
+            o = computer.read_output(amp)
             signal = o
-            prepend!(next.inputs, [pop!(amp.outputs)])
+            computer.provide_input(next, o)
         end
         push!(amps, next)
         # return current amplifier to queue
@@ -41,7 +42,7 @@ function feedback_loop(program, phases, initial)
 end
 
 function initialize_amplifiers(program, phases, initial)
-    amps = reverse([computer.State(copy(program), 1, 0, [phase], [], false) for phase in phases])
+    amps = reverse([computer.State(copy(program), 1, 0, [phase], [], false, false) for phase in phases])
     # provide initial signal to first amp
     first = pop!(amps)
     first.inputs = prepend!(first.inputs, [0])

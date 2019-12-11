@@ -10,6 +10,7 @@ mutable struct State
     relative_base::Int64
     inputs::Array{Int64,1}
     outputs::Array{Int64,1}
+    blocked::Bool
     halted::Bool
 end
 
@@ -18,12 +19,21 @@ function run(program)
 end
 
 function run(program, inputs)
-    state = State(program, 1, 0, inputs, [], false)
+    state = State(program, 1, 0, inputs, [], false, false)
     while true
         state = next(state)
         state.halted ? break : continue
     end
     return state
+end
+
+function read_output(state)
+    return pop!(state.outputs)
+end
+
+function provide_input(state, input)
+    prepend!(state.inputs, [input])
+    state.blocked = false
 end
 
 function next(state)
@@ -49,6 +59,7 @@ function next(state)
         3 => begin
             if isempty(state.inputs)
                 # block on waiting for input
+                state.blocked = true
                 return state
             else
                 input = pop!(state.inputs)
@@ -145,6 +156,7 @@ function wval(state, parameter, value)
             idx = read(state, instruction + parameter)
             write(state, idx + 1, value)
         end
+        1 => throw(ErrorException("invalid parameter mode: $mode"))
         2 => begin
             offset = read(state, instruction + parameter)
             write(state, rel + offset + 1, value)

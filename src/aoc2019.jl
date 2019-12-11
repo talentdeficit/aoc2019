@@ -7,5 +7,7 @@ include("password/lib.jl")
 include("star_chart/lib.jl")
 include("thrusters/lib.jl")
 include("sif/lib.jl")
+include("asteroids/lib.jl")
+include("hull/lib.jl")
 
 end

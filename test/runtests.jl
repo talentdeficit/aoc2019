@@ -6,6 +6,7 @@ using aoc2019.password
 using aoc2019.star_chart
 using aoc2019.thrusters
 using aoc2019.sif
+using aoc2019.asteroids
 
 @testset "the tyranny of the rocket equation -- part one                          " begin
     @test fuel.total([12]) == 2
@@ -23,10 +24,13 @@ end
 @testset "1202 program alarm -- part one                                          " begin
     s = computer.run([1,0,0,0,99])
     @test s.program == [2,0,0,0,99]
+
     s = computer.run([2,3,0,3,99])
     @test s.program == [2,3,0,6,99]
+
     s = computer.run([2,4,4,5,99,0])
     @test s.program == [2,4,4,5,99,9801]
+
     s = computer.run([1,1,1,4,99,5,6,0,99])
     @test s.program == [30,1,1,4,2,5,6,0,99]
 end
@@ -36,6 +40,7 @@ end
         ["R75","D30","R83","U83","L12","D49","R71","U7","L72"],
         ["U62","R66","U55","R34","D71","R55","D58","R83"]
     ) == 159
+
     @test wiring.manhattan_distance(
         ["R98","U47","R26","D63","R33","U87","L62","D20","R33","U53","R51"],
         ["U98","R91","D20","R16","D67","R40","U7","R15","U6","R7"]
@@ -47,6 +52,7 @@ end
         ["R75","D30","R83","U83","L12","D49","R71","U7","L72"],
         ["U62","R66","U55","R34","D71","R55","D58","R83"]
     ) == 610
+
     @test wiring.signal_delay(
         ["R98","U47","R26","D63","R33","U87","L62","D20","R33","U53","R51"],
         ["U98","R91","D20","R16","D67","R40","U7","R15","U6","R7"]
@@ -74,43 +80,58 @@ end
     # equals tests
     s = computer.run([3,9,8,9,10,9,4,9,99,-1,8], [8])
     @test s.outputs == [1]
+
     s = computer.run([3,9,8,9,10,9,4,9,99,-1,8], [9])
     @test s.outputs == [0]
+
     s = computer.run([3,3,1108,-1,8,3,4,3,99], [8])
     @test s.outputs == [1]
+
     s = computer.run([3,3,1108,-1,8,3,4,3,99], [9])
     @test s.outputs == [0]
+
     # less than tests
     s = computer.run([3,9,7,9,10,9,4,9,99,-1,8], [7])
     @test s.outputs == [1]
+
     s = computer.run([3,9,7,9,10,9,4,9,99,-1,8], [8])
     @test s.outputs == [0]
+
     s = computer.run([3,9,7,9,10,9,4,9,99,-1,8], [9])
     @test s.outputs == [0]
+
     s = computer.run([3,3,1107,-1,8,3,4,3,99], [7])
     @test s.outputs == [1]
+
     s = computer.run([3,3,1107,-1,8,3,4,3,99], [8])
     @test s.outputs == [0]
+
     s = computer.run([3,3,1107,-1,8,3,4,3,99], [9])
     @test s.outputs == [0]
+
     # jump tests
     s = computer.run([3,12,6,12,15,1,13,14,13,4,13,99,-1,0,1,9], [0])
     @test s.outputs == [0]
+
     s = computer.run([3,12,6,12,15,1,13,14,13,4,13,99,-1,0,1,9], [99])
     @test s.outputs == [1]
+
     s = computer.run([3,3,1105,-1,9,1101,0,0,12,4,12,99,1], [0])
     @test s.outputs == [0]
+
     # other
     s = computer.run([
         3,21,1008,21,8,20,1005,20,22,107,8,21,20,1006,20,31,
         1106,0,36,98,0,0,1002,21,125,20,4,20,1105,1,46,104,
         999,1105,1,46,1101,1000,1,20,4,20,1105,1,46,98,99], [7])
     @test s.outputs == [999]
+
     s = computer.run([
         3,21,1008,21,8,20,1005,20,22,107,8,21,20,1006,20,31,
         1106,0,36,98,0,0,1002,21,125,20,4,20,1105,1,46,104,
         999,1105,1,46,1101,1000,1,20,4,20,1105,1,46,98,99], [8])
     @test s.outputs == [1000]
+
     s = computer.run([
         3,21,1008,21,8,20,1005,20,22,107,8,21,20,1006,20,31,
         1106,0,36,98,0,0,1002,21,125,20,4,20,1105,1,46,104,
@@ -137,11 +158,13 @@ end
         [4,3,2,1,0],
         0
     ) == 43210
+
     @test thrusters.output(
         [3,23,3,24,1002,24,10,24,1002,23,-1,23,101,5,23,23,1,24,23,23,4,23,99,0,0],
         [0,1,2,3,4],
         0
     ) == 54321
+
     @test thrusters.output(
         [3,31,3,32,1002,32,10,32,1001,31,-2,31,1007,31,0,33,
             1002,33,7,33,1,33,31,31,1,32,31,31,4,31,99,0,0,0
@@ -159,6 +182,7 @@ end
         [9,8,7,6,5],
         0
     ) == 139629729
+
     @test thrusters.feedback_loop(
         [3,52,1001,52,-5,52,3,53,1,52,56,54,1007,54,5,55,1005,55,26,1001,
             54,-5,54,1105,1,12,1,53,54,53,1008,54,0,55,1001,55,1,55,2,53,
@@ -182,10 +206,91 @@ end
     program = [109,1,204,-1,1001,100,1,100,1008,100,16,101,1006,101,0,99]
     s = computer.run(copy(program))
     @test s.outputs == reverse!(program)
+
     program = [1102,34915192,34915192,7,4,7,99,0]
     s = computer.run(program)
     @test length(digits(first(s.outputs))) == 16
+
     program = [104,1125899906842624,99]
     s = computer.run(program)
     @test first(s.outputs) == 1125899906842624
+end
+
+@testset "monitoring station -- part one                                          " begin
+    map = asteroids.chart([".#..#", ".....", "#####", "....#", "...##"])
+    (coords, visible) = asteroids.maxima(map)
+    @test coords == asteroids.Point(4, 5)
+    @test visible == 8
+
+    map = asteroids.chart([
+        "......#.#.",
+        "#..#.#....",
+        "..#######.",
+        ".#.#.###..",
+        ".#..#.....",
+        "..#....#.#",
+        "#..#....#.",
+        ".##.#..###",
+        "##...#..#.",
+        ".#....####"
+    ])
+    (coords, visible) = asteroids.maxima(map)
+    @test coords == asteroids.Point(6, 9)
+    @test visible == 33
+
+    map = asteroids.chart([
+        "#.#...#.#.",
+        ".###....#.",
+        ".#....#...",
+        "##.#.#.#.#",
+        "....#.#.#.",
+        ".##..###.#",
+        "..#...##..",
+        "..##....##",
+        "......#...",
+        ".####.###."
+    ])
+    (coords, visible) = asteroids.maxima(map)
+    @test coords == asteroids.Point(2, 3)
+    @test visible == 35
+
+    map = asteroids.chart([
+        ".#..##.###...#######",
+        "##.############..##.",
+        ".#.######.########.#",
+        ".###.#######.####.#.",
+        "#####.##.#.##.###.##",
+        "..#####..#.#########",
+        "####################",
+        "#.####....###.#.#.##",
+        "##.#################",
+        "#####.##.###..####..",
+        "..######..##.#######",
+        "####.##.####...##..#",
+        ".#####..#.######.###",
+        "##...#.##########...",
+        "#.##########.#######",
+        ".####.#.###.###.#.##",
+        "....##.##.###..#####",
+        ".#.#.###########.###",
+        "#.#.#.#####.####.###",
+        "###.##.####.##.#..##"
+    ])
+    (coords, visible) = asteroids.maxima(map)
+    @test coords == asteroids.Point(12, 14)
+    @test visible == 210
+end
+
+@testset "monitoring station -- part two                                          " begin
+    tau = 2 * atan(0, -1)
+    map = asteroids.chart([
+        ".#....#####...#..",
+        "##...##.#####..##",
+        "##...#...#.#####.",
+        "..#.....X...###..",
+        "..#.#.....#....##"
+    ])
+    asts = asteroids.sweep(map, Point(9, 4), atan(-1, 0) + tau, atan(-1, 0))
+    @test asts[1] == Point(9, 2)
+    @test asts[9] == Point(16, 2)
 end
