@@ -40,3 +40,6 @@ ten:
 
 eleven:
 	julia --project=@. bin/eleven/run.jl
+
+twelve:
+	julia --project=@. bin/twelve/run.jl

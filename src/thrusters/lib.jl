@@ -5,49 +5,47 @@ export output, feedback_loop
 using aoc2019.computer
 
 function output(program, phases, initial)
-    signal = initial
-    for phase in phases
-        p = copy(program)
-        state = computer.run(p, [signal, phase])
-        signal = first(state.outputs)
+    ## setup computer io
+    io = [Channel{Int64}(256) for phase in phases]
+    ## add a channel for the thruster
+    thruster = Channel{Int64}(256)
+    append!(io, [thruster])
+    for i in 1:length(phases)
+        put!(io[i], phases[i])
     end
-    return first(signal)
+    ## start computers
+    for i in 1:length(phases)
+        @async computer.run(copy(program), io[i], io[i + 1])
+    end
+    ## provide initial signal
+    put!(io[1], initial)
+    ## read input to thruster
+    return take!(thruster)
 end
 
 function feedback_loop(program, phases, initial)
-    amps = initialize_amplifiers(program, phases, initial)
-    signal = nothing
-    while true
-        amp = pop!(amps)
-        if amp.halted != true
-            amp = computer.next(amp)
-        end
-        # copy output to next amplifier
-        next = pop!(amps)
-        while !isempty(amp.outputs)
-            o = computer.read_output(amp)
-            signal = o
-            computer.provide_input(next, o)
-        end
-        push!(amps, next)
-        # return current amplifier to queue
-        prepend!(amps, [amp])
-        # if all amplifiers are finished running, halt
-        if all(map(a -> a.halted == true, amps))
-            break;
+    ## setup computer io
+    io = [Channel{Int64}(256) for phase in phases]
+    for i in 1:length(phases)
+        put!(io[i], phases[i])
+    end
+    ## start amplifiers
+    amps = []
+    for i in 1:length(phases)
+        amp = @async computer.run(copy(program), io[i], io[mod(i + 1, 1:length(phases))])
+        push!(amps, amp)
+    end
+    ## provide initial signal
+    put!(io[1], initial)
+    ## wait for all computers to halt
+    while !all([istaskdone(amp) for amp in amps]); yield(); end
+    ## get any outputs -- there should only be one
+    for channel in io
+        if isready(channel)
+            return take!(channel)
         end
     end
-    # this should be the last output signal
-    return signal
 end
 
-function initialize_amplifiers(program, phases, initial)
-    amps = reverse([computer.State(copy(program), 1, 0, [phase], [], false, false) for phase in phases])
-    # provide initial signal to first amp
-    first = pop!(amps)
-    first.inputs = prepend!(first.inputs, [0])
-    push!(amps, first)
-    return amps
-end
 
 end
