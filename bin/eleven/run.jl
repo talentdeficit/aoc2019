@@ -1,34 +1,32 @@
-using aoc2019.computer: load_program, read_output, provide_input, next, State
+using aoc2019.computer: load_program, io, run
 using aoc2019.robot: Point, Black, White, deploy, color, paint!, move!
 using Match
 
 input = joinpath(@__DIR__, "input")
 p = load_program(input)
 
-function run(program, initial_color)
+function activate_robot(program, initial_color)
     surface = Dict{Point, Int}()
     robot = deploy(surface)
     paint!(robot, initial_color)
-    m = State(p, 1, 0, [], [], false, false)
-    while !m.halted
-        provide_input(m, color(robot))
-        m.blocked = false
-        while !m.blocked && !m.halted
-            m = next(m)
-        end
-        current_color = read_output(m)
-        turn = read_output(m)
+    stdin, stdout = io()
+    task = @async run(p, stdin, stdout)
+    while !istaskdone(task)
+        put!(stdin, color(robot))
+        current_color = take!(stdout)
+        turn = take!(stdout)
         paint!(robot, current_color)
         move!(robot, turn)
+        yield()
     end
     return surface
 end
 
-ship = run(copy(p), Black)
+ship = activate_robot(copy(p), Black)
 p1 = length(collect(keys(ship)))
 @assert p1 == 1951
 
-ship = run(copy(p), White)
+ship = activate_robot(copy(p), White)
 p2 = length(collect(keys(ship)))
 @assert p2 == 249
 
@@ -50,6 +48,7 @@ print("space police -- part two\n    identification code :\n")
 for y in 1:ymax
     print("        ")
     for x in 1:xmax
+        # print bottom to top to reflect the image and make it readable
         glyph = panel[x, ymax - y + 1] == 1 ? "#" : " "
         print("$glyph")
     end

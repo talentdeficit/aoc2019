@@ -22,17 +22,10 @@ end
 end
 
 @testset "1202 program alarm -- part one                                          " begin
-    s = computer.run([1,0,0,0,99])
-    @test s.program == [2,0,0,0,99]
-
-    s = computer.run([2,3,0,3,99])
-    @test s.program == [2,3,0,6,99]
-
-    s = computer.run([2,4,4,5,99,0])
-    @test s.program == [2,4,4,5,99,9801]
-
-    s = computer.run([1,1,1,4,99,5,6,0,99])
-    @test s.program == [30,1,1,4,2,5,6,0,99]
+    @test computer.run([1,0,0,0,99]) == [2,0,0,0,99]
+    @test computer.run([2,3,0,3,99]) == [2,3,0,6,99]
+    @test computer.run([2,4,4,5,99,0]) == [2,4,4,5,99,9801]
+    @test computer.run([1,1,1,4,99,5,6,0,99]) == [30,1,1,4,2,5,6,0,99]
 end
 
 @testset "crossed wires -- part one                                               " begin
@@ -72,71 +65,114 @@ end
 end
 
 @testset "sunny with a chance of asteroids -- part one                            " begin
-    s = computer.run([1002,4,3,4,33])
-    @test s.program == [1002,4,3,4,99]
+    @test computer.run([1002,4,3,4,33]) == [1002,4,3,4,99]
 end
 
 @testset "sunny with a chance of asteroids -- part two                            " begin
     # equals tests
-    s = computer.run([3,9,8,9,10,9,4,9,99,-1,8], [8])
-    @test s.outputs == [1]
+    stdin, stdout = io()
+    put!(stdin, 8)
+    @async computer.run([3,9,8,9,10,9,4,9,99,-1,8], stdin, stdout)
+    @test take!(stdout) == 1
 
-    s = computer.run([3,9,8,9,10,9,4,9,99,-1,8], [9])
-    @test s.outputs == [0]
+    stdin, stdout = io()
+    put!(stdin, 9)
+    @async computer.run([3,9,8,9,10,9,4,9,99,-1,8], stdin, stdout)
+    @test take!(stdout) == 0
 
-    s = computer.run([3,3,1108,-1,8,3,4,3,99], [8])
-    @test s.outputs == [1]
+    stdin, stdout = io()
+    put!(stdin, 8)
+    @async computer.run([3,3,1108,-1,8,3,4,3,99], stdin, stdout)
+    @test take!(stdout) == 1
 
-    s = computer.run([3,3,1108,-1,8,3,4,3,99], [9])
-    @test s.outputs == [0]
+    stdin, stdout = io()
+    put!(stdin, 9)
+    @async computer.run([3,3,1108,-1,8,3,4,3,99], stdin, stdout)
+    @test take!(stdout) == 0
 
     # less than tests
-    s = computer.run([3,9,7,9,10,9,4,9,99,-1,8], [7])
-    @test s.outputs == [1]
+    stdin, stdout = io()
+    put!(stdin, 7)
+    @async computer.run([3,9,7,9,10,9,4,9,99,-1,8], stdin, stdout)
+    @test take!(stdout) == 1
 
-    s = computer.run([3,9,7,9,10,9,4,9,99,-1,8], [8])
-    @test s.outputs == [0]
+    stdin, stdout = io()
+    put!(stdin, 8)
+    @async computer.run([3,9,7,9,10,9,4,9,99,-1,8], stdin, stdout)
+    @test take!(stdout) == 0
 
-    s = computer.run([3,9,7,9,10,9,4,9,99,-1,8], [9])
-    @test s.outputs == [0]
+    stdin, stdout = io()
+    put!(stdin, 9)
+    @async computer.run([3,9,7,9,10,9,4,9,99,-1,8], stdin, stdout)
+    @test take!(stdout) == 0
 
-    s = computer.run([3,3,1107,-1,8,3,4,3,99], [7])
-    @test s.outputs == [1]
+    stdin, stdout = io()
+    put!(stdin, 7)
+    @async computer.run([3,3,1107,-1,8,3,4,3,99], stdin, stdout)
+    @test take!(stdout) == 1
 
-    s = computer.run([3,3,1107,-1,8,3,4,3,99], [8])
-    @test s.outputs == [0]
+    stdin, stdout = io()
+    put!(stdin, 8)
+    @async computer.run([3,3,1107,-1,8,3,4,3,99], stdin, stdout)
+    @test take!(stdout) == 0
 
-    s = computer.run([3,3,1107,-1,8,3,4,3,99], [9])
-    @test s.outputs == [0]
+    stdin, stdout = io()
+    put!(stdin, 9)
+    @async computer.run([3,3,1107,-1,8,3,4,3,99], stdin, stdout)
+    @test take!(stdout) == 0
 
     # jump tests
-    s = computer.run([3,12,6,12,15,1,13,14,13,4,13,99,-1,0,1,9], [0])
-    @test s.outputs == [0]
+    stdin, stdout = io()
+    put!(stdin, 0)
+    @async computer.run([3,12,6,12,15,1,13,14,13,4,13,99,-1,0,1,9], stdin, stdout)
+    @test take!(stdout) == 0
 
-    s = computer.run([3,12,6,12,15,1,13,14,13,4,13,99,-1,0,1,9], [99])
-    @test s.outputs == [1]
+    stdin, stdout = io()
+    put!(stdin, 99)
+    @async computer.run([3,12,6,12,15,1,13,14,13,4,13,99,-1,0,1,9], stdin, stdout)
+    @test take!(stdout) == 1
 
-    s = computer.run([3,3,1105,-1,9,1101,0,0,12,4,12,99,1], [0])
-    @test s.outputs == [0]
+    stdin, stdout = io()
+    put!(stdin, 0)
+    @async computer.run([3,3,1105,-1,9,1101,0,0,12,4,12,99,1], stdin, stdout)
+    @test take!(stdout) == 0
 
     # other
-    s = computer.run([
-        3,21,1008,21,8,20,1005,20,22,107,8,21,20,1006,20,31,
-        1106,0,36,98,0,0,1002,21,125,20,4,20,1105,1,46,104,
-        999,1105,1,46,1101,1000,1,20,4,20,1105,1,46,98,99], [7])
-    @test s.outputs == [999]
+    stdin, stdout = io()
+    put!(stdin, 7)
+    @async computer.run(
+        [3,21,1008,21,8,20,1005,20,22,107,8,21,20,1006,20,31,
+            1106,0,36,98,0,0,1002,21,125,20,4,20,1105,1,46,104,
+            999,1105,1,46,1101,1000,1,20,4,20,1105,1,46,98,99
+        ],
+        stdin,
+        stdout
+    )
+    @test take!(stdout) == 999
 
-    s = computer.run([
-        3,21,1008,21,8,20,1005,20,22,107,8,21,20,1006,20,31,
-        1106,0,36,98,0,0,1002,21,125,20,4,20,1105,1,46,104,
-        999,1105,1,46,1101,1000,1,20,4,20,1105,1,46,98,99], [8])
-    @test s.outputs == [1000]
+    stdin, stdout = io()
+    put!(stdin, 8)
+    @async computer.run(
+        [3,21,1008,21,8,20,1005,20,22,107,8,21,20,1006,20,31,
+            1106,0,36,98,0,0,1002,21,125,20,4,20,1105,1,46,104,
+            999,1105,1,46,1101,1000,1,20,4,20,1105,1,46,98,99
+        ],
+        stdin,
+        stdout
+    )
+    @test take!(stdout) == 1000
 
-    s = computer.run([
-        3,21,1008,21,8,20,1005,20,22,107,8,21,20,1006,20,31,
-        1106,0,36,98,0,0,1002,21,125,20,4,20,1105,1,46,104,
-        999,1105,1,46,1101,1000,1,20,4,20,1105,1,46,98,99], [9])
-    @test s.outputs == [1001]
+    stdin, stdout = io()
+    put!(stdin, 9)
+    @async computer.run(
+        [3,21,1008,21,8,20,1005,20,22,107,8,21,20,1006,20,31,
+            1106,0,36,98,0,0,1002,21,125,20,4,20,1105,1,46,104,
+            999,1105,1,46,1101,1000,1,20,4,20,1105,1,46,98,99
+        ],
+        stdin,
+        stdout
+    )
+    @test take!(stdout) == 1001
 end
 
 @testset "universal orbit map -- part one                                         " begin
@@ -204,16 +240,23 @@ end
 
 @testset "sensor boost -- part one                                                " begin
     program = [109,1,204,-1,1001,100,1,100,1008,100,16,101,1006,101,0,99]
-    s = computer.run(copy(program))
-    @test s.outputs == reverse!(program)
+    stdin, stdout = computer.io()
+    task = @async computer.run(copy(program), stdin, stdout)
+    while !istaskdone(task); yield(); end
+    close(stdout)
+    @test [o for o in stdout] == program
 
     program = [1102,34915192,34915192,7,4,7,99,0]
-    s = computer.run(program)
-    @test length(digits(first(s.outputs))) == 16
+    stdin, stdout = computer.io()
+    task = @async computer.run(program, stdin, stdout)
+    while !istaskdone(task); yield(); end
+    @test length(digits(take!(stdout))) == 16
 
     program = [104,1125899906842624,99]
-    s = computer.run(program)
-    @test first(s.outputs) == 1125899906842624
+    stdin, stdout = computer.io()
+    task = @async computer.run(program, stdin, stdout)
+    while !istaskdone(task); yield(); end
+    @test take!(stdout) == 1125899906842624
 end
 
 @testset "monitoring station -- part one                                          " begin
