@@ -7,12 +7,12 @@ p = load_program(input)
 
 perms = collect(permutations([4,3,2,1,0]))
 
-p1 = maximum([output(copy(p), perm, 0) for perm in perms])
+p1 = maximum(asyncmap(perm -> output(copy(p), perm, 0), perms))
 @assert p1 == 338603
 
 perms = collect(permutations([9,8,7,6,5]))
 
-p2 = maximum([feedback_loop(copy(p), perm, 0) for perm in perms])
+p2 = maximum(asyncmap(perm -> feedback_loop(copy(p), perm, 0), perms))
 @assert p2 == 63103596
 
 print("-----------------------------------------------------------------------\n")
