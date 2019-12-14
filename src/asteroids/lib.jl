@@ -1,6 +1,6 @@
 module asteroids
 
-export Point, tau, chart, maxima, sweep
+export Point, tau, chart, maxima, sweep, destroy
 
 const tau = 2 * atan(0, -1)
 
@@ -75,6 +75,11 @@ function sweep(coords, origin, start, finish)
     directions = keys(filter(entry -> entry.first >= finish && entry.first < start, acc))
     result = [acc[direction] for direction in sort(collect(directions))]
     return result
+end
+
+function destroy(coords, origin, start, finish)
+    inrange = sweep(coords, origin, start, finish)
+    [delete!(coords, ast) for ast in inrange]
 end
 
 end
