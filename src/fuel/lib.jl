@@ -1,4 +1,4 @@
-module fuel
+module Fuel
 
 export total, correct_total
 

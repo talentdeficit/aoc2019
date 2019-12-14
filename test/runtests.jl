@@ -1,5 +1,5 @@
 using Test
-using aoc2019.fuel
+using aoc2019.Fuel
 using aoc2019.computer
 using aoc2019.wiring
 using aoc2019.password
@@ -9,16 +9,16 @@ using aoc2019.sif
 using aoc2019.asteroids
 
 @testset "the tyranny of the rocket equation -- part one                          " begin
-    @test fuel.total([12]) == 2
-    @test fuel.total([14]) == 2
-    @test fuel.total([1969]) == 654
-    @test fuel.total([100756]) == 33583
+    @test Fuel.total([12]) == 2
+    @test Fuel.total([14]) == 2
+    @test Fuel.total([1969]) == 654
+    @test Fuel.total([100756]) == 33583
 end
 
 @testset "the tyranny of the rocket equation -- part two                          " begin
-    @test fuel.correct_total([14]) == 2
-    @test fuel.correct_total([1969]) == 966
-    @test fuel.correct_total([100756]) == 50346
+    @test Fuel.correct_total([14]) == 2
+    @test Fuel.correct_total([1969]) == 966
+    @test Fuel.correct_total([100756]) == 50346
 end
 
 @testset "1202 program alarm -- part one                                          " begin

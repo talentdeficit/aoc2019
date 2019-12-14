@@ -1,4 +1,4 @@
-using aoc2019.fuel: total, correct_total
+using aoc2019.Fuel: total, correct_total
 using DelimitedFiles
 
 input = joinpath(@__DIR__, "input")
