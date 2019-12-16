@@ -50,8 +50,8 @@ for i = 1:100
     global answer = output(answer, base)
 end
 
-p1 = answer[1:8]
-@assert p1 == [8, 4, 9, 7, 0, 7, 2, 6]
+p1 = String(map(n -> convert(Char, n + 48), answer[1:8]))
+@assert p1 == "84970726"
 
 
 expanded = []
@@ -64,8 +64,8 @@ for i in 1:100
     global answer = reverse!(map(x -> mod(x, 10), cumsum(reverse!(answer))))
 end
 
-p2 = answer[1:8]
-@assert p2 == [4, 7, 6, 6, 4, 4, 6, 9]
+p2 = String(map(n -> convert(Char, n + 48), answer[1:8]))
+@assert p2 == "47664469"
 
 print("-----------------------------------------------------------------------\n")
 print("flawed frequency transmission -- part one\n    message : $p1\n")
