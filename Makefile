@@ -1,7 +1,7 @@
 .PHONY: current install test run
 
 current:
-	julia --project=@. bin/sixteen/run.jl
+	julia --project=@. bin/seventeen/run.jl
 
 install:
 	julia --project=@. -e 'using Pkg; Pkg.instantiate()'
