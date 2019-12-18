@@ -170,18 +170,17 @@ p1 = calibrate(view)
 @assert p1 == 7280
 
 # generate the path from start to end as turn-step pairs
-route = path(view)
-@show route
-
-p[1] = 2
-stdin, stdout = io()
-task = @async run(copy(p), stdin, stdout)
+# route = path(view)
 
 ## i compressed this by hand. no good ideas on how to do it progmatically
 routine = map(c -> convert(Int, c), ['A', ',', 'B', ',', 'A', ',', 'C', ',', 'B', ',', 'C', ',', 'A', ',', 'B', ',', 'A', ',', 'C'])
 a = map(c -> convert(Int, c), ['R', ',', '1', '0', ',', 'L', ',', '8', ',', 'R', ',', '1', '0', ',', 'R', ',', '4'])
 b = map(c -> convert(Int, c), ['L', ',', '6', ',', 'L', ',', '6', ',', 'R', ',', '1', '0'])
 c = map(c -> convert(Int, c), ['L', ',', '6', ',', 'R', ',', '1', '2', ',', 'R', ',', '1', '2', ',', 'R', ',', '1', '0'])
+
+p[1] = 2
+stdin, stdout = io()
+task = @async run(copy(p), stdin, stdout)
 
 send_input!(stdin, routine)
 send_input!(stdin, a)
